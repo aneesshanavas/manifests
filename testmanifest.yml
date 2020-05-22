@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: security-application
+  restartPolicy: Always
+spec:
+  hostNetwork: true
+  containers:
+    - name: security-container1
+      image: attregistrydomain.com:5050/att-poc-docker:2.5.50-37
+      securityContext:
+        capabilities:
+          add:
+          - NET_ADMIN
+          - NET_RAW
+          - SETGID
+          - SETUID
+      volumeMounts:
+        - mountPath: /bin/iptables
+          name: att-poc-iptables
+        - mountPath: /bin/ebtables
+          name: att-poc-ebtables
+        - mountPath: /lib
+          name: att-poc-lib
+        - mountPath: /bin/ip6tables
+          name: att-poc-ip6tables
+        - mountPath: /persistent-data
+          name: pers_data
+        - mountPath: /tmp
+          name: temp_data
+        - mountPath: /var/etc
+          name: att-poc-var-etc
+        - mountPath: /var/
+          name: att-poc-var
+  volumes:
+    - name: att-poc-iptables
+      hostPath:
+        path: /bin/iptables
+        type: Directory
+    - name: att-poc-ebtables
+      hostPath:
+        path: /bin/ebtables
+        type: Directory
+    - name: att-poc-lib
+      hostPath:
+        path: /lib
+        type: Directory
+    - name: att-poc-ip6tables
+      hostPath:
+        path: /bin/ip6tables
+        type: Directory
+    - name: pers_data
+      hostPath:
+        path: /data/bitdefender
+        type: Directory
+    - name: temp_data
+      hostPath:
+        path: /tmp/bitdefender
+        type: Directory
+    - name: att-poc-var-etc
+      hostPath:
+        path: /var/etc
+        type: Directory
